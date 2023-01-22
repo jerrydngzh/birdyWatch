@@ -397,6 +397,34 @@ const initCards = () => {
     stackedCard.init();
 }
 
+const captureImage = () => {
+    let pngURL = canvas.toDataURL();
+    let base64 = pngURL.split(",")[1];
+    return base64;
+}
+
+const updateCards = () => {
+    let imageBase64 = captureImage();
+    fetch("/whosThatBirdmon", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: {
+            birdBase64: imageBase64
+        }
+    }).then(response => {
+        json = response.json();
+        birds = json.birds;
+        renderCards();
+    })
+}
+
+const beginUpdateLoop = () => {
+    setInterval(updateCards, 3000);
+}
+
 initCards();
 startCamera();
 renderCards();
+beginUpdateLoop();

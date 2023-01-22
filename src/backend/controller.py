@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 @app.route("/whosThatBirdmon", methods = ['POST'])
 def whosThatBirdmon():
+<<<<<<< HEAD
     print("in whosThatBirdmon fxn")
     # mega function that does everything 
     base64Image = request.data
@@ -36,15 +37,29 @@ def whosThatBirdmon():
     ImageLabeledBirdsList = make_birds(imageFilePath)
     print(ImageLabeledBirdsList)
     # serialize ImageLabeled Class 
+=======
+
+    # mega function that does everything
+    imagePath = request.data
+    ImageLabeledBirdsList = make_birds(imagePath)
+
+    # serialize ImageLabeled Class
+>>>>>>> 74a3612ae0c7513baaaefec063fd4eee61abe23b
     response = ImageLabeledBirdsList.dumps()
     print(response)
     response = "hello"
     return response
 
 
-@app.route("/")
-def base():
-    return "base of the flask server"
+# @app.route("/")
+# def base():
+#     return "base of the flask server"
+
+#serve static folder
+@app.route('/<path:path>')
+def send_static(path):
+    return send_from_directory('../frontend', path)
+
 
 if __name__ == "__main__":
     app.run()
