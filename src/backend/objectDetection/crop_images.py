@@ -17,7 +17,7 @@ def crop_image(img, edges):
 
 def crop_all(images, edges):
     """
-
+    crops all images to only bird pictures
     :param images: array of images
     :param edges: 2D array of edge tuples
     :return: 2D array of cropped images
@@ -42,6 +42,21 @@ def get_pixel_pos(im, edges):
                 int(np.floor(edges[i][3] * im.height)))
         pixel_edges.append(edge)
     return pixel_edges
+
+def process_image(img):
+    """
+    process image to fit tf requirements
+    :param img: image to process
+    :return: processed image as array
+    """
+    img = img.resize((224, 224))
+    im_arr = np.array(img)
+    im_arr = im_arr.astype('float32')
+    im_arr /= 255.0  # set colour channels to [0,1]
+    # print(im_arr)
+    return im_arr
+
+
 
 
 def main():
