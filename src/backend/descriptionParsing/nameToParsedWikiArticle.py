@@ -28,6 +28,32 @@ def nameToParsedWikiArticle(name: str) -> str:
     output = bird.title + "\n" + wikipedia.summary(name, sentences=3)
     output+="\n" + "Learn More at: " + bird.url
     return output
+def getNameFromScientificName(name: str) -> str:
+    """Takes a scientific name and returns the common name for that bird.
+
+    Args:
+        scientificName (str): The scientific name of the bird.
+
+    Returns:
+        str: The common name of the bird.
+    """
+    bird = wikipedia.page(name)
+
+    return bird.title
+
+def getSummaryFromScientificName(name: str) -> str:
+    """Takes a scientific name and returns the summary for that bird.
+    
+    Args:
+        scientificName (str): The scientific name of the bird.
+
+    Returns:
+        str: The summary of the bird.
+    """
+    bird = wikipedia.page(name)
+    return wikipedia.summary(name, sentences=3)
+
+
 
 
 
