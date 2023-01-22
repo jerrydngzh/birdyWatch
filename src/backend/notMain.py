@@ -46,7 +46,7 @@ def make_img_array(filename):
 def what_bird(img):
     '''Returns the index of the bird in the list of birds'''
 
-    bird_df = pd.read_csv(r'src\backend\aiy_birds_V1_labelmap.csv')
+    bird_df = pd.read_csv(r'src\backend\\aiy_birds_V1_labelmap.csv')
     m = hub.KerasLayer('https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1')
     clasifier = tf.keras.Sequential([m])
     
@@ -82,7 +82,7 @@ def make_birds(path):
     return birds
 
 def main():
-    print(make_birds(r'src\backend\objectDetection\test.jpg'))
+    print(make_birds(r'src\backend\\objectDetection\\test.jpg'))
 
 
 if __name__ == "__main__":
