@@ -1,6 +1,19 @@
 from PIL import Image
 import numpy as np
 
+def crop_and_process(img, edges):
+    """
+
+    :param img: single image to process
+    :param edges: list of bounded box edges
+    :return: np arrays of cropped and processed imgs
+    """
+    crop_imgs = crop_image(img, edges)
+    arrs = []
+    for i in range(len(crop_imgs)):
+        arrs.append(process_image(crop_imgs[i]))
+    return arrs
+
 
 def crop_image(img, edges):
     """
@@ -15,6 +28,7 @@ def crop_image(img, edges):
         images.append(im_crop)
     return images
 
+# this one might be useless idk
 def crop_all(images, edges):
     """
     crops all images to only bird pictures
@@ -66,9 +80,11 @@ def main():
                                       (0.8049169182777405, 0.19893230497837067, 0.9949325919151306,  0.6618878841400146),
                                       (0.05395161733031273, 0.334568589925766, 0.2764419615268707,  0.7562070488929749)])
     crop_imgs = crop_all(images, [[(475, 130, 575, 230)], edges])
-    for im in crop_imgs:
-        for i in range(len(im)):
-            im[i].show()
+    # uncomment to load imgs
+    # for im in crop_imgs:
+    #     for i in range(len(im)):
+    #         im[i].show()
+    print(crop_and_process(images[1], edges))
 
 if __name__ == "__main__":
     main()
