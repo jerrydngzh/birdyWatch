@@ -126,10 +126,8 @@ body {
 }
 
 .stacked-cards li img {
-    position: relative;
-    display: block;
-    width: 100%;
-    max-width: 100%;
+    position: absolute;
+    width: 200px;
     height: 200px;
     object-fit: cover;
     background: black;

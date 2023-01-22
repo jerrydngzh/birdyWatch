@@ -2,23 +2,25 @@
 const birds = [
     {
         name: "African Grey",
-        bbox: [0.0, 0.0, 10.0, 10.0],
+        bbox: [0.0, 0.0, 100.0, 100.0],
         scientificName: "Psittacus erithacus",
         description: "The African grey parrot (Psittacus erithacus) is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot. The African grey parrot is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot.",
     },
     {
         name: "Canary",
-        bbox: [5.0, 5.0, 10.0, 10.0],
+        bbox: [5.0, 5.0, 100.0, 100.0],
         scientificName: "Serinus canaria",
         description: "The canary (Serinus canaria) is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan.",
     },
     {
         name: "Cockatiel",
-        bbox: [0.0, 0.0, 10.0, 10.0],
+        bbox: [0.0, 0.0, 100.0, 100.0],
         scientificName: "Nymphicus hollandicus",
         description: "The cockatiel (Nymphicus hollandicus) is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet.",
     }
 ]
+
+let capturedImage = null;
 
 // starts the camera using the 'video' element
 const startCamera = () => {
@@ -44,16 +46,34 @@ const startCamera = () => {
 const renderCards = () => {
     let cards = document.getElementById('cards');
     let cardsHTML = '';
-    // TODO: IMG from provided bounding box
-    birds.forEach(bird => {
+    for (let bird of birds) {
+        let birdSrc = "https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+        if (capturedImage !== null) {
+            console.log("cropping bird")
+            // get a cropped photo, save it locally in the browser
+            let canvas = document.createElement("canvas");
+            let video = document.getElementById("video");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0);
+            let birdImageData = ctx.getImageData(bird.bbox[0], bird.bbox[1], bird.bbox[2], bird.bbox[3]);
+            let saveCanvas = document.createElement("canvas");
+            saveCanvas.width = birdImageData.width;
+            saveCanvas.height = birdImageData.height;
+            let saveCtx = saveCanvas.getContext("2d");
+            saveCtx.putImageData(birdImageData, 0, 0);
+            birdSrc = saveCanvas.toDataURL();
+        }
         cardsHTML += `
         <li class="item">
-            <img src="https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
+            <img src="${birdSrc}"/>
             <h2>${bird.name}</h2>
         </li>
         `
-    });
+    }
     cards.innerHTML = cardsHTML;
+    initCards();
 }
 
 const initCards = () => {
@@ -398,26 +418,37 @@ const initCards = () => {
 }
 
 const captureImage = () => {
+    let canvas = document.createElement("canvas");
+    let video = document.getElementById("video");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
     let pngURL = canvas.toDataURL();
     let base64 = pngURL.split(",")[1];
     return base64;
 }
 
 const updateCards = () => {
-    let imageBase64 = captureImage();
-    fetch("/whosThatBirdmon", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: {
-            birdBase64: imageBase64
-        }
-    }).then(response => {
-        json = response.json();
-        birds = json.birds;
-        renderCards();
-    })
+    capturedImage = captureImage();
+    try {
+        fetch("/whosThatBirdmon", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: {
+                birdBase64: capturedImage
+            }
+        }).then(response => {
+            json = response.json();
+            birds = json.birds;
+            renderCards();
+        }).catch(error => {
+            console.log(error);
+        })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const beginUpdateLoop = () => {
