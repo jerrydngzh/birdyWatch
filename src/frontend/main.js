@@ -29,7 +29,8 @@ const startCamera = () => {
     video.setAttribute('autoplay', '');
     video.setAttribute('muted', '');
     /* Setting up the constraint */
-    var facingMode = "user"; // Can be 'user' or 'environment' to access back or front camera (NEAT!)
+    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var facingMode = isMobile ? "environment" : "user"; // Can be 'user' or 'environment' to access back or front camera (NEAT!)
     var constraints = {
         audio: false,
         video: {
