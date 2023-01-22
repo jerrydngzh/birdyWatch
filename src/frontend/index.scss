@@ -1,0 +1,143 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-family: 'Helvetica', sans-serif;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+#main-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#video-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #000;
+    text-align: center;
+}
+
+#results-container {
+    width: 100%;
+    position: relative;
+    height: 100%;
+    background-color: #cccccc;
+}
+
+#results {
+    display: none;
+    width: 400px;
+    background-color: white;
+    position: fixed;
+    z-index: 1000000;
+    top: 0;
+    right: 0;
+    height: 100%;
+}
+
+.location {
+    align-self: center;
+    padding: 10%;
+
+    h1 {
+        color: #bbb;
+        font-size: 300%;
+        font-weight: 900;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+
+    p {
+        color: #bbb;
+        margin-bottom: 60px;
+    }
+}
+
+#cards-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+}
+
+.featured {
+    align-self: center;
+}
+
+.slider {
+    list-style: none;
+    padding: 0;
+}
+
+.slider li {
+    height: 300px;
+    width: 200px;
+    border-radius: 4px;
+    background-color: #00bcd4;
+    display: flex;
+}
+
+.slider li h2 {
+    background: #fff;
+    width: 100%;
+    padding: 20px 20px;
+    position: absolute;
+    bottom: 0;
+}
+
+/* STACKED CARDS */
+.stacked-cards {
+    position: relative;
+    max-width: 100%;
+}
+
+.stacked-cards ul {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left: 0;
+}
+
+.stacked-cards li {
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 3px 6px 0px #333;
+    list-style: none;
+    width: 200px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    transition: 0.5s ease transform;
+}
+
+.stacked-cards li:after {
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.stacked-cards li img {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: black;
+    z-index: 4;
+}
+
+.stacked-cards li.active {
+    cursor: default;
+    box-shadow: 0px 0px 100px 10px rgb(255, 255, 255);
+    transition: 0.5s ease transform;
+}
