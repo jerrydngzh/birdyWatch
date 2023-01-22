@@ -1,4 +1,5 @@
 import requests
+import wikipedia
 
 def nameToParsedWikiArticleTest(name: str) -> str:
     """Takes a name and returns the parsed wiki article for that name.
@@ -23,21 +24,16 @@ def nameToParsedWikiArticle(name: str) -> str:
     Returns:
         str: The parsed wiki article for the given name.
     """
-
-    #get article from wikipedia
-    #name
-    #scientific name
-    #endangered species
-    #image
-
-    #parse article for relevant information
-    #return parsed article
-    pass
+    bird = wikipedia.page(name)
+    output = bird.title + "\n" + wikipedia.summary(name, sentences=3)
+    output+="\n" + "Learn More at: " + bird.url
+    return output
 
 
 
 def main():
     print(nameToParsedWikiArticleTest("test"))
+    print(nameToParsedWikiArticle("Poecile atricapillus"))
 
 
 if __name__ == "__main__":
