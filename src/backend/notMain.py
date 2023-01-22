@@ -9,7 +9,7 @@ import Bird as b
 from  descriptionParsing import nameToParsedWikiArticle as ntp 
 import pandas as pd
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"C:\Users\jubel\Documents\tayyib_creds.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"C:\Users\Tayyi\Downloads\arched-medley-270903-cd81461b44bb.json"
 
 
 # Google cloud vision API detection
@@ -48,7 +48,7 @@ def what_bird(img):
     :return: string representing bird name
     """
 
-    bird_df = pd.read_csv(r'./aiy_birds_V1_labelmap.csv')
+    bird_df = pd.read_csv(r'src\backend\\aiy_birds_V1_labelmap.csv')
     m = hub.KerasLayer('https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1')
     clasifier = tf.keras.Sequential([m])
     
@@ -89,7 +89,7 @@ def make_birds(path):
 
 
 def main():
-    print(make_birds(r'./objectDetection/test.jpg'))
+    print(make_birds(r'src\backend\\objectDetection\\test.jpg'))
 
 
 if __name__ == "__main__":
