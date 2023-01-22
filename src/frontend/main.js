@@ -1,5 +1,5 @@
 // TODO: fetch this from the backend
-const birds = [
+let birds = [
     {
         name: "African Grey",
         bbox: [0.0, 0.0, 100.0, 100.0],
@@ -425,7 +425,7 @@ const captureImage = () => {
     canvas.getContext("2d").drawImage(video, 0, 0);
     let pngURL = canvas.toDataURL();
     let base64 = pngURL.split(",")[1];
-    return base64;
+    return pngURL;
 }
 
 const updateCards = () => {
@@ -436,9 +436,9 @@ const updateCards = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: {
+            body: JSON.stringify({
                 birdBase64: capturedImage
-            }
+            })
         }).then(response => {
             json = response.json();
             birds = json.birds;
@@ -451,11 +451,11 @@ const updateCards = () => {
     }
 }
 
-const beginUpdateLoop = () => {
-    setInterval(updateCards, 3000);
-}
+// const beginUpdateLoop = () => {
+//     setInterval(updateCards, 3000);
+// }
 
 initCards();
 startCamera();
 renderCards();
-beginUpdateLoop();
+// begbseginUpdateLoop inUpdateLoop();

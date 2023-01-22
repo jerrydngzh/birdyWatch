@@ -68,6 +68,7 @@ def process_image(img):
     :param img: image to process
     :return: processed image as array
     """
+    img = img.convert('RGB')
     img = img.resize((224, 224))
     im_arr = np.array(img)
     im_arr = im_arr.astype('float32')

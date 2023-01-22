@@ -68,7 +68,7 @@ def make_birds(path):
     :return: bird information
     """
     img = Image.open(path)   
-    print(get_bird_box(path))
+    # print(get_bird_box(path))
     bounding_boxes = get_bird_box(path)
     cropped = ci.crop_and_process(img, bounding_boxes)
     birds = []

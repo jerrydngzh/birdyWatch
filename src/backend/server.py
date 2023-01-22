@@ -1,5 +1,6 @@
-from flask import Flask, redirect, url_for, request
-from notMain import make_birds
+from flask import Flask, request, send_from_directory
+from imageProcessor import make_birds
+import json
 
 app = Flask(__name__)
 
@@ -17,28 +18,39 @@ app = Flask(__name__)
 @app.route("/whosThatBirdmon", methods = ['POST'])
 def whosThatBirdmon():
     print("in whosThatBirdmon fxn")
-    # mega function that does everything 
-    base64Image = request.data
-
-    print(base64Image)
+    requestObj = request.json
+    # deserialize json request object
+    base64String = requestObj['birdBase64']
 
     # decode base64 string to image, save to local file system
     import base64
-    import uuid
-    imageId = uuid.uuid4()
+    base64ImageBytes = base64String.replace('data:image/png;base64,', '').encode()
     imageFilePath = f"src/backend/objectDetection/images/bird.png"
-
+    
     with open(imageFilePath, "wb") as fh:
-        fh.write(base64.decodebytes(base64Image))
+        fh.write(base64.decodebytes(base64ImageBytes))
 
     # get image file path from local file system
-
     ImageLabeledBirdsList = make_birds(imageFilePath)
-    print(ImageLabeledBirdsList)
-    # serialize ImageLabeled Class 
-    response = ImageLabeledBirdsList.dumps()
-    print(response)
-    response = "hello"
+
+    if (len(ImageLabeledBirdsList) == 0):
+        return []
+
+    print(ImageLabeledBirdsList[0])
+
+    # serialize ImageLabeled Class
+    birdsDict = {
+        "birds": []
+    }
+    for bird in ImageLabeledBirdsList:
+        birdsDict["birds"].append({
+            "name": bird.scientific_name,
+            "bbox": bird.bounding_box,
+        })
+
+    # bird.image = bird.image.decode("utf-8")
+    response = json.dumps(birdsDict)
+
     return response
 
 
