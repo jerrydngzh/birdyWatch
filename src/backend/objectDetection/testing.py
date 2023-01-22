@@ -45,7 +45,7 @@ def what_bird(img):
     
     out = clasifier.predict(img[np.newaxis, ...])
     # print(out)
-    return tf.math.argmax(out[0], axis=-1)
+    return tf.math.argmax(out[0], axis=-1).numpy()
 
 def main():
     img = Image.open(r'src/backend/objectDetection/images/ducks.jpg')
