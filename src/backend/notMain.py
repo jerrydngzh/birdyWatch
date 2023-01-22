@@ -68,11 +68,17 @@ def make_birds(path):
     birds = []
     for i in range(len(cropped)):
         scientific_name = what_bird(cropped[i])
-        print(scientific_name)
-        # birds.append(b.Bird(name= ntp.getNameFromScientificName(scientific_name),
-        #                     scientific_name=scientific_name, 
-        #                     description=ntp.getSummaryFromScientificName(scientific_name),
-        #                     bounding_box=bounding_boxes[i]))
+        try:
+            name = ntp.getNameFromScientificName(scientific_name)
+            summary = ntp.getSummaryFromScientificName(scientific_name)
+        except:
+            name = "Unknown No Wikipedia Article"
+            summary = "Unknown No Wikipedia Article"
+
+        birds.append(b.Bird(name= name,
+                            scientific_name=scientific_name, 
+                            description=summary,
+                            bounding_box=bounding_boxes[i]))
     return birds
 
 def main():
