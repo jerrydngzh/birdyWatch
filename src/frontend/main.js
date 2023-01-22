@@ -430,6 +430,7 @@ const captureImage = () => {
 }
 
 const updateCards = () => {
+    renderCards();
     capturedImage = captureImage();
     try {
         fetch("/whosThatBirdmon", {
@@ -449,6 +450,7 @@ const updateCards = () => {
         })
     } catch (error) {
         console.log(error);
+        renderCards();
     }
 }
 
