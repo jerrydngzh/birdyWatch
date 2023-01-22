@@ -1,6 +1,6 @@
 import os
 #Google cloud vision API detection
-def get_bird_box ():
+def get_bird_box():
     """Localize objects in the local image.
 
     Args:
@@ -24,8 +24,9 @@ def get_bird_box ():
             for vertex in object_.bounding_poly.normalized_vertices:
                 x.append(vertex.x)
                 y.append(vertex.y)
-            output.append((min(x), max(y), max(x), min(y)))
+            output.append((min(x), min(y), max(x), max(y)))
     return output
+
 def main():
     print(get_bird_box())
 
