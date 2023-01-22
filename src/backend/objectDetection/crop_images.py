@@ -88,7 +88,8 @@ def main():
              (0.8049169182777405, 0.19893230497837067, 0.9949325919151306, 0.6618878841400146),
              (0.05395161733031273, 0.334568589925766, 0.2764419615268707, 0.7562070488929749)]
     # edges given in [0,1] from get_bird_box()
-    print(crop_and_process(im, edges))
+    result = crop_and_process(im, edges)
+    # print(result[0].shape)  # expect this to be (224, 224, 3)
 
 
 if __name__ == "__main__":

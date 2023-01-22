@@ -4,6 +4,7 @@ import tensorflow_hub as hub
 import numpy as np
 import crop_images as ci
 from PIL import Image
+import pandas as pd
 
 #Google cloud vision API detection
 def get_bird_box(path):
@@ -40,12 +41,16 @@ def make_img_array(filename):
     return image
 
 def what_bird(img):
+    bird_df = pd.read_csv('aiy_birds_V1_labelmap.csv')
     m = hub.KerasLayer('https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1')
     clasifier = tf.keras.Sequential([m])
     
     out = clasifier.predict(img[np.newaxis, ...])
     # print(out)
-    return tf.math.argmax(out[0], axis=-1).numpy()
+    bird = tf.math.argmax(out[0], axis=-1).numpy()
+
+    row = bird_df.loc[bird_df['id'] == int(bird)]
+    return row.iloc[0, 1]
 
 def main():
     img = Image.open(r'src/backend/objectDetection/images/ducks.jpg')
