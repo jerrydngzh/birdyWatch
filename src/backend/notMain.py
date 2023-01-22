@@ -1,11 +1,13 @@
 import os
+import sys
 import tensorflow.compat.v2 as tf
 import tensorflow_hub as hub
 import numpy as np
-import crop_images as ci
+from objectDetection import crop_images as ci
 from PIL import Image
 import Bird as b
-import nameToParsedWikiArticle as ntp 
+from  descriptionParsing import nameToParsedWikiArticle as ntp 
+import pandas as pd
 
 #Google cloud vision API detection
 def get_bird_box(path):
@@ -14,7 +16,7 @@ def get_bird_box(path):
     Args:
     path: The path to the local file.
     """
-    path = os.path.join(os.path.dirname(__file__), path)
+    path = path
     from google.cloud import vision
     client = vision.ImageAnnotatorClient()
 
@@ -44,37 +46,37 @@ def make_img_array(filename):
 def what_bird(img):
     '''Returns the index of the bird in the list of birds'''
 
+    bird_df = pd.read_csv(r'src\backend\aiy_birds_V1_labelmap.csv')
     m = hub.KerasLayer('https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1')
     clasifier = tf.keras.Sequential([m])
     
     out = clasifier.predict(img[np.newaxis, ...])
     # print(out)
-    return int(tf.math.argmax(out[0], axis=-1).numpy())
+    bird = tf.math.argmax(out[0], axis=-1).numpy()
+
+    row = bird_df.loc[bird_df['id'] == int(bird)]
+    return row.iloc[0, 1]
 
 
 
 def make_birds(path):
 
-    img = Image.open(os.path.dirname(__file__), path)   
+    img = Image.open(path)   
     print(get_bird_box(path))
     bounding_boxes = get_bird_box(path)
     cropped = ci.crop_and_process(img, bounding_boxes)
     birds = []
-    for img in range(cropped):
-        scientific_name = what_bird(cropped[img])
-        birds.append(b.Bird(name= ntp.getNameFromScientificName(scientific_name),
-                            scientific_name=scientific_name, 
-                            description=ntp.getSummary(scientific_name),
-                            bounding_box=bounding_boxes[img]))
+    for i in range(len(cropped)):
+        scientific_name = what_bird(cropped[i])
+        print(scientific_name)
+        # birds.append(b.Bird(name= ntp.getNameFromScientificName(scientific_name),
+        #                     scientific_name=scientific_name, 
+        #                     description=ntp.getSummaryFromScientificName(scientific_name),
+        #                     bounding_box=bounding_boxes[i]))
     return birds
 
 def main():
-    img = Image.open(r'src/backend/objectDetection/images/ducks.jpg')
-    print(get_bird_box('./test.jpg'))
-    cropped = ci.crop_and_process(img, get_bird_box('./images/ducks.jpg'))
-    for img in cropped:
-        print(what_bird(img))
-       
+    print(make_birds(r'src\backend\objectDetection\test.jpg'))
 
 
 if __name__ == "__main__":
