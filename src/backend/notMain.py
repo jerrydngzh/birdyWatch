@@ -6,7 +6,7 @@ import numpy as np
 from objectDetection import crop_images as ci
 from PIL import Image
 import Bird as b
-from  descriptionParsing import nameToParsedWikiArticle as ntp 
+from  descriptionParsing import nameToParsedWikiArticle as ntp
 import pandas as pd
 
 #Google cloud vision API detection
@@ -40,7 +40,7 @@ def make_img_array(filename):
     raw = tf.io.read_file(filename)
     image = tf.image.decode_png(raw, channels=3)
     #make pixel values between 0 and 1
-    
+
     return image
 
 def what_bird(img):
@@ -49,7 +49,7 @@ def what_bird(img):
     bird_df = pd.read_csv(r'src\backend\aiy_birds_V1_labelmap.csv')
     m = hub.KerasLayer('https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1')
     clasifier = tf.keras.Sequential([m])
-    
+
     out = clasifier.predict(img[np.newaxis, ...])
     # print(out)
     bird = tf.math.argmax(out[0], axis=-1).numpy()
@@ -57,11 +57,9 @@ def what_bird(img):
     row = bird_df.loc[bird_df['id'] == int(bird)]
     return row.iloc[0, 1]
 
-
-
 def make_birds(path):
 
-    img = Image.open(path)   
+    img = Image.open(path)
     print(get_bird_box(path))
     bounding_boxes = get_bird_box(path)
     cropped = ci.crop_and_process(img, bounding_boxes)
@@ -76,14 +74,13 @@ def make_birds(path):
             summary = "Unknown No Wikipedia Article"
 
         birds.append(b.Bird(name= name,
-                            scientific_name=scientific_name, 
+                            scientific_name=scientific_name,
                             description=summary,
                             bounding_box=bounding_boxes[i]))
     return birds
 
 def main():
     print(make_birds(r'src\backend\objectDetection\test.jpg'))
-
 
 if __name__ == "__main__":
     main()
