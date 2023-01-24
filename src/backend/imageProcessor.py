@@ -31,7 +31,8 @@ def get_bird_box(path):
         image=image).localized_object_annotations
     output = []
     for object_ in objects:
-        if object_.name == "Bird":
+        print(object_.name)
+        if object_.name == "Bird" or object_.name == "Parrot" or object_.name == "Animal" or object_.name == "Penguin" or object_.name == "Canary":
             x = []
             y = []
             for vertex in object_.bounding_poly.normalized_vertices:
@@ -78,13 +79,15 @@ def make_birds(path):
             name = ntp.getNameFromScientificName(scientific_name)
             summary = ntp.getSummaryFromScientificName(scientific_name)
         except:
-            name = "Unknown No Wikipedia Article"
-            summary = "Unknown No Wikipedia Article"
+            name = scientific_name
+            summary = "Rare and mysterious bird. Unknown, No BirdyDex entry."
 
         birds.append(b.Bird(name= name,
                             scientific_name=scientific_name, 
                             description=summary,
                             bounding_box=bounding_boxes[i]))
+    if(len(birds) == 0):
+        print("No birds found")
     return birds
 
 

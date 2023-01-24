@@ -44,7 +44,9 @@ def whosThatBirdmon():
     }
     for bird in ImageLabeledBirdsList:
         birdsDict["birds"].append({
-            "name": bird.scientific_name,
+            "name": bird.name,
+            "description": bird.description,
+            "scientificName": bird.scientific_name,
             "bbox": bird.bounding_box,
         })
 

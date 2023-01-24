@@ -2,23 +2,33 @@
 let birds = [
     {
         name: "African Grey",
-        bbox: [0.0, 0.0, 100.0, 100.0],
+        default:true,
+        bbox: [0.0, 0.0, 0.1, 0.1],
         scientificName: "Psittacus erithacus",
         description: "The African grey parrot (Psittacus erithacus) is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot. The African grey parrot is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot.",
-    },
-    {
-        name: "Canary",
-        bbox: [5.0, 5.0, 100.0, 100.0],
-        scientificName: "Serinus canaria",
-        description: "The canary (Serinus canaria) is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan.",
-    },
-    {
-        name: "Cockatiel",
-        bbox: [0.0, 0.0, 100.0, 100.0],
-        scientificName: "Nymphicus hollandicus",
-        description: "The cockatiel (Nymphicus hollandicus) is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet.",
     }
 ]
+
+// let birds = [
+    // {
+    //     name: "African Grey",
+    //     bbox: [0.0, 0.0, 0.1, 0.1],
+    //     scientificName: "Psittacus erithacus",
+    //     description: "The African grey parrot (Psittacus erithacus) is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot. The African grey parrot is a long-tailed, predominantly grey, African parrot. It is the only member of the genus Psittacus and is found in the forests of western and central Africa. The African grey parrot is the most intelligent of all parrots, and is the only parrot known to speak. It is also known as the Congo grey parrot, the Timneh parrot, and the African grey parrot.",
+    // }
+    // {
+    //     name: "Canary",
+    //     bbox: [0.1, 0.1, 0.1, 0.1],
+    //     scientificName: "Serinus canaria",
+    //     description: "The canary (Serinus canaria) is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan. The canary is a small songbird in the finch family Fringillidae. The scientific name is from Latin serinus, a siskin, and canaria, from the Latin name for the Canary Islands. The canary is a popular pet due to its small size, bright plumage, and relatively long lifespan.",
+    // },
+    // {
+    //     name: "Cockatiel",
+    //     bbox: [0.0, 0.0, 0.1, 0.1],
+    //     scientificName: "Nymphicus hollandicus",
+    //     description: "The cockatiel (Nymphicus hollandicus) is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet. The cockatiel is a small cockatoo, the only member of the genus Nymphicus. It is native to Australia, where it is common in the wild, and is also kept as a pet.",
+    // }
+// ]
 
 let capturedImage = null;
 
@@ -47,9 +57,11 @@ const startCamera = () => {
 const renderCards = () => {
     let cards = document.getElementById('cards');
     let cardsHTML = '';
+    if(!birds || !birds.length) return;
     for (let bird of birds) {
-        let birdSrc = "https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-        if (capturedImage !== null) {
+        console.log(bird)
+        let birdSrc = "https://www.thehappychickencoop.com/wp-content/uploads/2022/07/African-Grey-Parrot.jpg"
+        if (capturedImage != null && !bird.default) {
             console.log("cropping bird")
             // get a cropped photo, save it locally in the browser
             let canvas = document.createElement("canvas");
@@ -58,7 +70,14 @@ const renderCards = () => {
             canvas.height = video.videoHeight;
             let ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0);
-            let birdImageData = ctx.getImageData(bird.bbox[0], bird.bbox[1], bird.bbox[2], bird.bbox[3]);
+            c_width = canvas.width;
+            c_height = canvas.height;
+
+            scaledBbox = [Math.floor(bird.bbox[0]*c_width), Math.floor(bird.bbox[1]*c_height), Math.floor(bird.bbox[2]*c_width), Math.floor(bird.bbox[3]*c_height)]
+
+            console.log(scaledBbox)
+
+            let birdImageData = ctx.getImageData(scaledBbox[0], scaledBbox[1], scaledBbox[2], scaledBbox[3]);
             let saveCanvas = document.createElement("canvas");
             saveCanvas.width = birdImageData.width;
             saveCanvas.height = birdImageData.height;
@@ -69,7 +88,8 @@ const renderCards = () => {
         cardsHTML += `
         <li class="item">
             <img src="${birdSrc}"/>
-            <h2>${bird.name}</h2>
+            <h2>${bird.name.toLowerCase().includes("background")?"Ļ̷̡̛̭̪̙̘̫̦̳̫̻͕͍̗̦̬̘̻̹͍͕̺̦̇̀̏̏̇͊͂͊̒̍͑͗̆̏̌̍̀̿̿͊̈͊̆̇̽͗̈́̔̑̋͌̉̈̔̈́͛̈́̃́͋̄͊́̄̍́͂̐̓͆̓̾̓͗̀̚̚̚̚̕̚͜͜͠͠͠͝͝͝͝ȩ̸̩̦̩̩͔͇̪̝̤̘͚̺̠̺̈͆̍̈́̈́͆̍͒̎̑͂̀̈́̓̄͑̅̓̊͑͂̐̉̓̾̿̎̐̆̑͒͒̑͛͛̈̈͋̍̕̚͠g̵̡̧̢̨̨̢̡̡̢̱̩̤̱͕͖͇̯̤̠̹̞̼̠̬͖͔̥̥͉͈̞̞̞̳̘̟̲̦̣̘̰̹͓͕̮̫̫̣̘͓̩̪͓̼͕͔̘͈͓͕͖̫͓̙̎̾͆̉ĕ̴̡̡̨̨̛̜͚͙̜̦͈͚̞̱͖̝̩͈͓̖̣͔̼̻͎̫̟͈͔̭̭͎͙̻̗̩̹̖̘̪͕͈͈̹̄͑́̋͋̀̀̂̂̿̉̊͋̽͗̆̿̂̄̿̈́́̌͋̂̋̐̋̎̿̄̈́̀̓̎̿̓̃̀̐̊͊̎͐̈́̔͘̚̚̚͘̕̚͜͜͝͝ͅn̷̨̢̬̲̦̱̙̲̺̝͍̹̘͇̣͈̖͍̯͖̭̹̫̬͙̣̟̣̘̩̥͇̮̜̤̈́̾̿͋̿̌̉͌̇̃̓͑̚̕͜͠d̴̢̛̛͙̻̰̹͈͉̮̫̺̗̭̠͐̈́͆́̒̈́̂͑̈́̈́͐͗͐̃̈͊͒̀͌́͗̊̈́̀͂̽̉̑́̀͋̽́͗̅̑̀͗͒̓͊̍̊̓̐̈́́̎̑͂͐̔̀̃̿͂͐̔̎̆̓̇̓̏̕͘̕̚͝͠ả̵̧̢̨̡̧̛͎͓̙͚͎̪̹̞̝̬̥̣̹͙̻͈̲̹͚̮̦͓̫̟̞͚̺͔̹̙͓̹͖̭̫̮͖̹̼̬͎͖̦̲̘̟̝͚̣̺̹͋͋̀̀̔̊́́͒̄̎͒̍͐̈̿͗̂́́̄͋͂͒̄͂̓̿͊̂̀̌̄̇̐̀̂̅̈́̅̿̃̆̿̈̀̄̓́̓̇̅̋̑͊̇̈́̑̒̓͑̄̕̕͘̕͜͠͝͝͝r̷̡̡̛̛̺̜̲͚̙̤͈̙̲͚̩̯̰̹̤̣̝̯̟̦͔͓̺͖̺͍̦͖̺̟̼̪̟̗̃̌̄͐̐̏͋̈́̂̍͗̈́͑̈́̑͒̿͋̑̏̈́̓́̃̃̈̅̾̿̈̄͒̅́̏́͗̓̄̈́̎͗̾͗̉̌̒͋͋̽̓̿̐̽̓̽̌͌͐̕͘̕͘̚͝͝͝͝͠͠͝͝y̸̧̢̢̛͕͇̫̜̫̜̼͔͚͉͕̮̹̥͙͓̟̯̹͍̫̟̝̺͕̥̍͐́̅̑̍́̅͋͂̊̽̈́̈́͋͘͜͝ͅ ̵̧̬̳̻̝̟̪͎͚̇̀͂̐̿ͅB̸̡̨̡͙͈̩͈̳̠͕͚̹̦̦̦͉̟̗̼̱̮͔̟̩͙̦̩͇̙̟̟̗̰̣͓̃̇̂̃͊̊̍̈́̇͐̂̒̓͛̀̽̒̒͗̌̃̐̀̓̓̈́͐̃̑̈̆͂͒͌̚̚͘̚̕̕͜ͅͅį̶̨̧̨̨̛͈͙͎̠̻̼͕̱͓̣̙̞͓̬̹͇̮̙̠͖̪̖͙̘͕̯͎͉̣̯͖̺̳̪̬͔͗̅̌͗̂̎̈͂̂̄̑̐̃́̄̈́̓̓̍́̓̏͋̑̏̂͒̀̅̈́̇̀͋̇̍͊̈̚͘̕̕̚͜͠͠͠r̸̡̡̢̧̢̨̧͖̱̝̠̲͙̼͕͓͎͇̖̝̬̫̟͖͚̻͚̤̖̬̤̟̟͔̞̫̹̥̬̲͙̞̖͈̝̫̲͍̥͇͓͌̿̀̾̄̈́͋͐̄͂̓̇̑̀͗̅̌̿̈́̈́̈́̅̓̚̚͘͜͜͜͜͝ͅḑ̸̹̙̬̟̘̗̤̻͕̪̪̱̦̭̣͙̳̜̺̦̬̞̲̯̟̖̞̲̣̆̎̆̏̌̆̃̒̒͋͂̃̀̾̽͂̿́̚͜ͅͅͅ":bird.name}</h2>
+            <p>${bird.description}</p>
         </li>
         `
     }
@@ -441,9 +461,13 @@ const updateCards = () => {
                 birdBase64: capturedImage
             })
         }).then(response => {
-            json = response.json();
-            birds = json.birds;
-            renderCards();
+            json = response.json().then(birdData=> {
+                if(birdData.birds){
+                    birds = birdData.birds;
+                    renderCards();
+                }
+            });
+           
         }).catch(error => {
             console.log(error);
             renderCards();
